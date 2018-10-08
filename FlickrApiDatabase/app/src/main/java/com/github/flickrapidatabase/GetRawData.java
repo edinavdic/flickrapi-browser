@@ -35,9 +35,14 @@ class GetRawData extends AsyncTask<String, Void, String> {
         Log.d(TAG, "onPostExecute() ends ");
     }
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
+    protected void runInSameThread(String s) {
+        Log.d(TAG, "runInSameThread: starts");
+
+        if(mCallback != null){ // we can call onPostExecute, but if super class ever had any use it would break threads, so better here
+            mCallback.onDownloadComplete(doInBackground(s), mDownloadStatus);
+        }
+
+        Log.d(TAG, "runInSameThread: ends");
     }
 
     @Override
