@@ -3,11 +3,9 @@ package com.github.flickrapidatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 

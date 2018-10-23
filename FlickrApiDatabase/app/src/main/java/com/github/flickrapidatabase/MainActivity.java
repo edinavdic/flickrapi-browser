@@ -2,16 +2,21 @@ package com.github.flickrapidatabase;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements GetFlickrJsonData.OnDataAvailable {
     private static final String TAG = "MainActivity";
+
+    private FlickrRecyclerViewAdapter mFlickrRecyclerViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +25,12 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJsonData
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mFlickrRecyclerViewAdapter = new FlickrRecyclerViewAdapter(new ArrayList<Photo>(), this);
+        recyclerView.setAdapter(mFlickrRecyclerViewAdapter);
 
         Log.d(TAG, "onCreate: ends");
     }
@@ -31,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJsonData
         super.onResume();
         GetFlickrJsonData getFlickrJsonData = new GetFlickrJsonData("https://api.flickr.com/services/feeds/photos_public.gne", "en-us", true, this);
         // getFlickrJsonData.executeOnSameThread("android, photo");
-        getFlickrJsonData.execute("android, photo");
+        getFlickrJsonData.execute("photo");
         Log.d(TAG, "onResume: ends");
     }
 
@@ -60,8 +71,9 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJsonData
 
     @Override
     public void onDataAvailable(List<Photo> data, DownloadStatus status) {
+        Log.d(TAG, "onDataAvailable: onDataAvailable starts");
         if(status == DownloadStatus.OK ){
-            Log.d(TAG, "onDataAvailable: data is " + data);
+            mFlickrRecyclerViewAdapter.loadNewData(data);
         } else{
             Log.e(TAG, "onDataAvailable: failed with status " + status );
         }
