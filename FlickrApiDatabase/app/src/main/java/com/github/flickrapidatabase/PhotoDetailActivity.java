@@ -1,6 +1,7 @@
 package com.github.flickrapidatabase;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -25,13 +26,19 @@ public class PhotoDetailActivity extends BaseActivity {
         Photo photo = (Photo) intent.getSerializableExtra(PHOTO_TRANSFER);
         if(photo != null){
             TextView photoTitle = (TextView) findViewById(R.id.photo_title);
-            photoTitle.setText("Title: " + photo.getTitle());
+            Resources resources = getResources();
+            String text = resources.getString(R.string.photo_title_text, photo.getTitle());
+            photoTitle.setText(text);
+//            photoTitle.setText("Title: " + photo.getTitle());   1
 
             TextView photoTags = (TextView) findViewById(R.id.photo_tags);
-            photoTags.setText("Tags: " + photo.getTags());
+            text = resources.getString(R.string.photo_tags_text, photo.getTags());
+            photoTags.setText(text);
+//            photoTags.setText("Tags: " + photo.getTags());    2
 
             TextView photoAuthor = (TextView) findViewById(R.id.photo_author);
-            photoAuthor.setText("Author: " + photo.getAuthor());
+            photoAuthor.setText(resources.getString(R.string.photo_author_text, photo.getAuthor()));
+//            photoAuthor.setText("Author: " + photo.getAuthor());    3
 
             ImageView photoImage = (ImageView) findViewById(R.id.photo_image);
             Picasso.get().load(photo.getLink()).error(R.drawable.ic_launcher_foreground)

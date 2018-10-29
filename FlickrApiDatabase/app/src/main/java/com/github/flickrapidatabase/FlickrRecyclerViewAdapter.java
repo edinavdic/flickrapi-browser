@@ -36,19 +36,27 @@ class FlickrRecyclerViewAdapter extends RecyclerView.Adapter<FlickrRecyclerViewA
     @Override
     public void onBindViewHolder(@NonNull FlickrImageViewHolder holder, int position) {
         // Called by layout manager when it needs new data in an existing row
-        Photo photoItem = mPhotoList.get(position);
-        Log.d(TAG, "onBindViewHolder: " + photoItem.getTitle() + " --> " + position);
-        Picasso.get().load(photoItem.getImage()).error(R.drawable.ic_launcher_foreground)
-                .placeholder(R.drawable.ic_launcher_foreground)
-                .into(holder.thumbnail);
 
-        holder.title.setText(photoItem.getTitle());
+        //if there is no data to show, search result returns nothing
+        if((mPhotoList == null) || (mPhotoList.size() == 0)){
+            holder.thumbnail.setImageResource(R.drawable.ic_launcher_background);
+            holder.title.setText(R.string.empty_photo);
+
+        } else{
+            Photo photoItem = mPhotoList.get(position);
+            Log.d(TAG, "onBindViewHolder: " + photoItem.getTitle() + " --> " + position);
+            Picasso.get().load(photoItem.getImage()).error(R.drawable.ic_launcher_foreground)
+                    .placeholder(R.drawable.ic_launcher_foreground)
+                    .into(holder.thumbnail);
+
+            holder.title.setText(photoItem.getTitle());
+        }
     }
 
     @Override
     public int getItemCount() {
-//        Log.d(TAG, "getItemCount: called");
-        return ((mPhotoList != null) && (mPhotoList.size() != 0) ? mPhotoList.size() : 0);
+//        Log.d(TAG, "getItemCount: called"); if it returns 0 recyclerView wont display anything ( if it is 1 it alawys trystodisplay1 item)
+        return ((mPhotoList != null) && (mPhotoList.size() != 0) ? mPhotoList.size() : 1);
     }
 
     void loadNewData(List<Photo> newPhotos){
