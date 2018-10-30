@@ -1,1 +1,1 @@
-# flickrapi-database
+# flickrapi-browser
